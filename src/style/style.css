@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* font-family: "Bungee", sans-serif;   font-family: "Raleway", sans-serif; */
+body{
+    @apply bg-gradient-to-t from-teal-300 to-purple-300 bg-cover bg-no-repeat min-h-screen m-0 p-0 box-border;
+}

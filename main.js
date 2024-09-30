@@ -3,15 +3,15 @@ import gsap from 'gsap';
 import { setupCounter } from './counter.js'
 document.title = `Vanilla JS TODO List`
 document.querySelector('#app').innerHTML = `
-  <div class="bg-red-600">
-
-    <h1 class="text-2xl text-red-700 font-bold bg-slate-500">Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
+  <div>
+  <!...header....>
+  <header>
+    <main>
+      <div class="title-box">
+        <h1 class="title bg-clip-text text-transparent text-7xl text-center font-extrabold bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600"><span class="item">welcome to </span><span class="item">todo </span> app<span class="item"></span></h1>
+      </div>
+    </main>
+  </header>
   </div>
 `
 
