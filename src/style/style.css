@@ -5,5 +5,17 @@
 @tailwind utilities;
 /* font-family: "Bungee", sans-serif;   font-family: "Raleway", sans-serif; */
 body{
-    @apply bg-gradient-to-t from-teal-300 to-purple-300 bg-cover bg-no-repeat min-h-screen m-0 p-0 box-border;
+    @apply bg-gradient-to-t from-teal-300 to-purple-300 bg-cover bg-no-repeat min-h-screen m-0 p-0 box-border font-serif;
+}
+main{
+    @apply w-11/12 m-0 mx-auto h-full;
+}
+.line-svg{
+    @apply absolute z-10 left-0 bottom-0 opacity-80 overflow-visible ;
+}
+.input{
+    @apply w-full h-full absolute top-0 border-0 outline-none bg-transparent;
+}
+#character{
+    @apply absolute left-0 bottom-0 scale-75 origin-bottom translate-x-0 translate-y-20;
 }
