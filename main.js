@@ -1,5 +1,7 @@
 
-import { textWaving } from './src/js/textwaving';
+import { CustomError } from './src/js/customError';
+import { namePattern, companyPattern } from './src/js/namereg';
+import { colorize, textWaving, validSubmissionPlaceholder } from './src/js/textwaving';
 import './src/style/style.css';
 import gsap from 'gsap';
 
@@ -34,7 +36,7 @@ document.querySelector('#app').innerHTML = `
                     <div class="form-contents flex flex-col space-y-3">
                       <div class="input-container relative">
                         <p class="place-holder font-extralight capitalize relative z-10 opacity-70 pointer-events-none py-1 px-0 origin-left">your name</p>
-                        <input type="text" name="name" id="#" class="input">
+                        <input type="text" name="name" id="name" class="input">
 
                         <svg width="100%" height="2" viewBox="0 0 300 1" fill="none" xmlns="http://www.w3.org/2000/svg" class="line-svg">
                         <path class="elastic-line" d="M0 0.5C0 0.5 13.5 0.5 149.5 0.5C285.5 0.5 300 0.5 300 0.5" stroke="rgb(175, 172, 172)"/>
@@ -42,9 +44,9 @@ document.querySelector('#app').innerHTML = `
                         <div class="error-manage w-full text-xs capitalize font-black my-3 italic text-red-700 opacity-80 absolute left-0 -bottom-7 origin-bottom flex items-end justify-end"></div>
                       </div>
 
-                      <div class="input-container relative">
+                      <div class="pt-2 input-container relative">
                         <p class="place-holder font-extralight capitalize relative z-10 opacity-70 pointer-events-none py-1 px-0 origin-left">company name</p>
-                        <input type="text" name="name" id="#" class="input outline-none w-full bg-sky-50">
+                        <input type="text" name="company-name" id="company-name" class="input outline-none w-full bg-sky-50">
 
                         <svg width="100%" height="2" viewBox="0 0 300 1" fill="none" xmlns="http://www.w3.org/2000/svg" class="line-svg">
                         <path class="elastic-line" d="M0 0.5C0 0.5 13.5 0.5 149.5 0.5C285.5 0.5 300 0.5 300 0.5" stroke="rgb(175, 172, 172)"/>
@@ -56,6 +58,7 @@ document.querySelector('#app').innerHTML = `
                         <div class="flex flex-1 items-center justify-center mt-5">
                           <button type="submit" class="w-2/3 bg-cyan-600 py-3 px-5 text-purple-50 capitalize text-center font-sans ease-in-out transition-all hover: hover:bg-cyan-500 duration-300 rounded-md">click here</button>
                         </div>
+                        <div id="success-msg" class="flex items-center justify-center capitalize text-center text-xs italic pt-2 font-black font-sans text-sky-500"></div>
                       </div>
                     </div>
                   </form>
@@ -368,15 +371,92 @@ const formHandler = () => {
         const placeholder = container.querySelector('.place-holder');
         const line = container.querySelector('.elastic-line');
         const inputField = container.querySelector('input');
+        const errorMsg = container.querySelector('.error-manage');
         if (document.activeElement!==inputField) {
             
             if (!inputField.value) {
                 tl.to(placeholder,{y:0, scale:1, fontWeight:300, duration:.7, ease:"power3.easeOut"},'<35%')
             }
         }
+
+        inputField.addEventListener('input', (e) => {
+            try {
+                let validationResult;
+                
+                // Apply different validation depending on the input field
+                if (e.target.name === 'name') {
+                    validationResult = namePattern(e.target.value); // For personal names
+                } else if (e.target.name === 'company-name') {
+                    validationResult = companyPattern(e.target.value); // For company names
+                }
+        
+                const { isValid, error } = validationResult;
+                if (isValid) {
+                    colorize(line, placeholder, 'rgb(0, 180, 180)');
+                    errorMsg.textContent = '';
+                } else if (e.target.value.trim() === '') {
+                    colorize(line, placeholder, 'rgb(220, 20, 60)');
+                    throw new CustomError(error);
+                } else {
+                    colorize(line, placeholder, 'rgb(220, 20, 60)');
+                    throw new CustomError(error);
+                }
+            } catch (error) {
+                errorMsg.textContent = error.message;
+            }
+        });
     })
-  })
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let allValid = true; // To track if all fields are valid
+
+    [...containers].map(container => {
+        const line = container.querySelector('.elastic-line');
+        const input = container.querySelector('input');
+        const placeholder = container.querySelector('.place-holder');
+        const errorMsg = container.querySelector('.error-manage');
+        
+        let isValid = false;
+        let error = null;
+
+        // Apply validation based on the input name
+        if (input.name === 'name') {
+            ({ isValid, error } = namePattern(input.value.trim())); // Validate personal name
+        } else if (input.name === 'company-name') {
+            ({ isValid, error } = companyPattern(input.value.trim())); // Validate company name
+        }
+
+        if (!isValid) {
+            colorize(line, placeholder, 'rgb(220, 20, 60)');
+            errorMsg.textContent = error; // Display specific error message
+            allValid = false; // Mark as invalid if any field fails
+        } else {
+            colorize(line, placeholder, 'rgb(175, 172, 172)');
+            validSubmissionPlaceholder(placeholder); // Custom function for successful submission
+            errorMsg.textContent = ''; // Clear error message
+        }
+    });
+
+    // Reset form only if all fields are valid
+    if (allValid) {
+        form.reset(); // Reset the form fields
+        gsap.to('.place-holder', { y: 0, scale: 1, fontWeight: 300 }); // Reset placeholder positions
+        // Optionally, show a success message
+        const successMsg = document.querySelector('#success-msg');
+        successMsg.textContent = "Form submitted successfully!";
+    }
+});
+
+
 
 }
 
 formHandler()
+
+                // let data = {
+                //     Name: document.querySelector('#name').value,
+                //     companyName: document.querySelector('#company-name').value
+                // }
+                // successMsg.textContent = `hello ${data.Name.trim().split(' ').charAt(0)} you are ready to go!`;
