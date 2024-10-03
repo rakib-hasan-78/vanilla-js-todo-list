@@ -1,5 +1,5 @@
 import './src/style/style.css';
-import { animationRestored, colorize, textWaving } from './src/js/animation';
+import { animationRestored, colorize, curveToStraight, textWaving } from './src/js/animation';
 import gsap from 'gsap';
 import { companyPattern, namePattern } from './src/js/regex';
 import { CustomError } from './src/js/customError';
@@ -359,9 +359,7 @@ const formHandler = () => {
     // animation activating--->
     inputField.addEventListener('focus', ()=>{
         if (!inputField.value) {
-            tl.fromTo(line,{attr:{d:start}}, {attr:{d:end}, ease:"power2.out"});
-            tl.to(line, {attr:{d:start}, ease:'elastic.out(2,1)' },'<50%');
-            tl.to(placeholder, {y:-15, scale:.70, fontWeight:400},'<15%')
+            curveToStraight(line,start,end,line,start,placeholder)
         }
         });
     });

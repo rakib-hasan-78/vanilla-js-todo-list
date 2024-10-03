@@ -16,6 +16,12 @@ export const colorize = (line, placeholder,color) => {
     gsap.to(placeholder, {color:color, duration:.75},"<50%");
 }
 
+export const curveToStraight= (line,start, end,line,start, placeholder) => {
+    tl.fromTo(line,{attr:{d:start}}, {attr:{d:end}, ease:"power2.out"});
+    tl.to(line, {attr:{d:start}, ease:'elastic.out(2,1)' },'<50%');
+    tl.to(placeholder, {y:-15, scale:.70, fontWeight:400},'<15%');
+}
+
 export const animationRestored = (placeholder,y,scale ,timeTackle) => {
     tl.to(placeholder,
         {
