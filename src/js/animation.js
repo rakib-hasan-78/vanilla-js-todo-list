@@ -16,13 +16,13 @@ export const colorize = (line, placeholder,color) => {
     gsap.to(placeholder, {color:color, duration:.75},"<50%");
 }
 
-export const validSubmissionPlaceholder = (placeholder) => {
+export const animationRestored = (placeholder,y,scale ,timeTackle) => {
     tl.to(placeholder,
         {
-            y:0, 
-            scale:1,
-            duration:.7,
+            y:y, 
+            scale:scale,
             fontWeight:300,
-            ease:"power3.easeOut"
-        });
+            ease:"power3.easeOut",
+            duration:.6
+        },timeTackle);
 }

@@ -1,9 +1,9 @@
-
-import { CustomError } from './src/js/customError';
-import { namePattern, companyPattern } from './src/js/namereg';
-import { colorize, textWaving, validSubmissionPlaceholder } from './src/js/textwaving';
 import './src/style/style.css';
+import { animationRestored, colorize, textWaving } from './src/js/animation';
 import gsap from 'gsap';
+import { companyPattern, namePattern } from './src/js/regex';
+import { CustomError } from './src/js/customError';
+
 
 document.title = `Vanilla JS TODO List`
 document.querySelector('#app').innerHTML = `
@@ -51,12 +51,12 @@ document.querySelector('#app').innerHTML = `
                         <svg width="100%" height="2" viewBox="0 0 300 1" fill="none" xmlns="http://www.w3.org/2000/svg" class="line-svg">
                         <path class="elastic-line" d="M0 0.5C0 0.5 13.5 0.5 149.5 0.5C285.5 0.5 300 0.5 300 0.5" stroke="rgb(175, 172, 172)"/>
                         </svg>
-                        <div class="error-manage w-full text-xs capitalize font-black my-2 italic text-red-700 opacity-80 absolute left-0 -bottom-7 origin-bottom flex items-end justify-end"></div>
+                        <div class="error-manage w-full text-xs capitalize font-black mt-2 italic text-red-700 opacity-80 absolute left-0 -bottom-7 origin-bottom flex items-end justify-end"></div>
                       </div>
                       <!---button container--->
                       <div class="container">
                         <div class="flex flex-1 items-center justify-center mt-5">
-                          <button type="submit" class="w-2/3 bg-cyan-600 py-3 px-5 text-purple-50 capitalize text-center font-sans ease-in-out transition-all hover: hover:bg-cyan-500 duration-300 rounded-md">click here</button>
+                          <button type="submit" class="w-2/3 bg-cyan-600 py-3 px-5 text-purple-50 lowercase text-center font-serif ease-in-out transition-all hover: hover:bg-cyan-500 duration-300 rounded-md">click here</button>
                         </div>
                         <div id="success-msg" class="flex items-center justify-center capitalize text-center text-xs italic pt-2 font-black font-sans text-sky-500"></div>
                       </div>
@@ -347,6 +347,7 @@ textWaving('.item-one', '.item-two', '.item-three','.item-four')
 const formHandler = () => {
   const tl = gsap.timeline({defaults:{duration:.75, }});
   const form = document.querySelector('form');
+  const successMsg = document.querySelector('#success-msg');
   const containers = document.querySelectorAll('.input-container');
   const start = "M0 0.5C0 0.5 13.5 0.5 149.5 0.5C285.5 0.5 300 0.5 300 0.5";
   const end = "M1 0.5C1 0.5 26.5 11 149 11C271.5 11 302.5 0.5 302.5 0.5";
@@ -362,101 +363,95 @@ const formHandler = () => {
             tl.to(line, {attr:{d:start}, ease:'elastic.out(2,1)' },'<50%');
             tl.to(placeholder, {y:-15, scale:.70, fontWeight:400},'<15%')
         }
-    })
-  })
-    // animation restore----->
-
-  form.addEventListener('click', ()=>{
-    [...containers].map(container=>{
-        const placeholder = container.querySelector('.place-holder');
-        const line = container.querySelector('.elastic-line');
-        const inputField = container.querySelector('input');
-        const errorMsg = container.querySelector('.error-manage');
-        if (document.activeElement!==inputField) {
-            
-            if (!inputField.value) {
-                tl.to(placeholder,{y:0, scale:1, fontWeight:300, duration:.7, ease:"power3.easeOut"},'<35%')
-            }
-        }
-
-        inputField.addEventListener('input', (e) => {
-            try {
-                let validationResult;
-                
-                // Apply different validation depending on the input field
-                if (e.target.name === 'name') {
-                    validationResult = namePattern(e.target.value); // For personal names
-                } else if (e.target.name === 'company-name') {
-                    validationResult = companyPattern(e.target.value); // For company names
-                }
-        
-                const { isValid, error } = validationResult;
-                if (isValid) {
-                    colorize(line, placeholder, 'rgb(0, 180, 180)');
-                    errorMsg.textContent = '';
-                } else if (e.target.value.trim() === '') {
-                    colorize(line, placeholder, 'rgb(220, 20, 60)');
-                    throw new CustomError(error);
-                } else {
-                    colorize(line, placeholder, 'rgb(220, 20, 60)');
-                    throw new CustomError(error);
-                }
-            } catch (error) {
-                errorMsg.textContent = error.message;
-            }
         });
-    })
-  });
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    let allValid = true; // To track if all fields are valid
-
-    [...containers].map(container => {
-        const line = container.querySelector('.elastic-line');
-        const input = container.querySelector('input');
-        const placeholder = container.querySelector('.place-holder');
-        const errorMsg = container.querySelector('.error-manage');
-        
-        let isValid = false;
-        let error = null;
-
-        // Apply validation based on the input name
-        if (input.name === 'name') {
-            ({ isValid, error } = namePattern(input.value.trim())); // Validate personal name
-        } else if (input.name === 'company-name') {
-            ({ isValid, error } = companyPattern(input.value.trim())); // Validate company name
-        }
-
-        if (!isValid) {
-            colorize(line, placeholder, 'rgb(220, 20, 60)');
-            errorMsg.textContent = error; // Display specific error message
-            allValid = false; // Mark as invalid if any field fails
-        } else {
-            colorize(line, placeholder, 'rgb(175, 172, 172)');
-            validSubmissionPlaceholder(placeholder); // Custom function for successful submission
-            errorMsg.textContent = ''; // Clear error message
-        }
     });
+    // input validation ----> 
+    form.addEventListener('click',()=>{
+        [...containers].map(container=>{
+            const placeholder = container.querySelector('.place-holder');
+            const line = container.querySelector('.elastic-line')
+            const inputField = container.querySelector('.input');
+            const errMsg = container.querySelector('.error-manage');
+            
+            // restoring input animation 
+            if (document.activeElement !== inputField) {
+                if (!inputField.value) {
+                    animationRestored(placeholder,0,1,'<75%')
+                }
+            }
+            inputField.addEventListener('input', (e)=>{
+                 try {
+                    let validator;
+                    // check whether given is valid for name 
+                    if (e.target.name==='name') {
+                        validator = namePattern(e.target.value)
+                    }
+                    // check if company name is valid
+                     else if (e.target.name==='company-name') {
+                        validator = companyPattern(e.target.value)
+                    }
+                    // resetting both company and name validation in validator 
+                    const {isValid , error} = validator;
+                    if (isValid) {
+                        colorize(line, placeholder, 'rgb(0, 180, 180)');
+                        errMsg.textContent = ``;
+                    } 
+                    // if empty forms contains----->
+                    else if (e.target.value.trim()=== '') {
+                        colorize(line, placeholder, 'rgb(220, 20, 60)');
+                        throw new CustomError(error);
+                    }
+                    else{
+                        colorize(line, placeholder, 'rgb(220, 20, 60)');
+                        throw new CustomError(error);
+                    }
 
-    // Reset form only if all fields are valid
-    if (allValid) {
-        form.reset(); // Reset the form fields
-        gsap.to('.place-holder', { y: 0, scale: 1, fontWeight: 300 }); // Reset placeholder positions
-        // Optionally, show a success message
-        const successMsg = document.querySelector('#success-msg');
-        successMsg.textContent = "Form submitted successfully!";
-    }
-});
+                 } catch (error) {
+                    errMsg.textContent = error.message;
+                 }
+            })
+        })
+    })
+    // form submit
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let allValid = true;
+        [...containers].map(container=>{
+            const line = container.querySelector('.elastic-line');
+            const inputField = container.querySelector('.input');
+            const placeholder = container.querySelector('.place-holder');
+            const errMsg = container.querySelector('.error-manage');
 
+            let isValid = false;
+            let error = null;
 
+            if (inputField.name==='name') {
+                ({isValid, error}=namePattern(inputField.value.trim()))
+            } else if (inputField.name=== 'company-name') {
+                ({isValid,error}=companyPattern(inputField.value.trim()))
+            }
+            if (!isValid) {
+                colorize(line,placeholder, 'rgb(220, 20, 60)')
+                errMsg.textContent = error;
+                animationRestored(placeholder,-15,.75,'<15%')
+                allValid = false;
+            } else {
+                colorize(line, placeholder,'rgb(175, 172, 172)');
+                animationRestored(placeholder,0,1,'<10%')
+                errMsg.textContent = '';
+            }
+        })
 
+        if (allValid) {
+            let data ={
+                Name: form.querySelector('#name').value,
+                CompanyName: form.querySelector('#company-name').value
+            }
+        
+            successMsg.textContent = `Hello ${data.Name.split(' ')[0]}, Data submitted successfully!`;
+            form.reset()
+        }
+    })
 }
 
 formHandler()
-
-                // let data = {
-                //     Name: document.querySelector('#name').value,
-                //     companyName: document.querySelector('#company-name').value
-                // }
-                // successMsg.textContent = `hello ${data.Name.trim().split(' ').charAt(0)} you are ready to go!`;
