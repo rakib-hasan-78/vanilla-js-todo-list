@@ -23,7 +23,7 @@ export const namePattern = (name) => {
     if (name.length<=3) {
         return{
             isValid: false,
-            error: `Name must be longer than 2 characters.`
+            error: `Name must be longer than 3 characters.`
         }
     }
     // if name is not a number or nan 

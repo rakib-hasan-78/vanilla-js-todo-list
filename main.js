@@ -1,8 +1,8 @@
 import './src/style/style.css';
 import { animationRestored, colorize, curveToStraight, textWaving } from './src/js/animation';
-import gsap from 'gsap';
 import { companyPattern, namePattern } from './src/js/regex';
 import { CustomError } from './src/js/customError';
+import { dateSet, watch } from './src/js/date';
 
 
 document.title = `Vanilla JS TODO List`
@@ -21,7 +21,7 @@ document.querySelector('#app').innerHTML = `
       </main>
     </header>
     
-    <section class=" flex flex-1 items-center justify-center">
+    <section id="app-required" class=" flex flex-1 items-center justify-center mb-14">
       <div class="container flex items-center justify-center">
           <div class="bg-gradient-to-t from-zinc-300 to-fuchsia-200 w-4/6 grid grid-cols-2 gap-3 rounded-lg shadow-2xl shadow-zinc-400 relative h-80">
             <div>
@@ -334,6 +334,22 @@ document.querySelector('#app').innerHTML = `
           </div>
       </div>
     </section>
+    <section id="todo-section" class="mt-10 w-full h-80">
+        <div class="container mx-auto">
+            <div class="flex flex-col flex-1 items-center justify-center w-4/6 mx-auto bg-gradient-to-t from-zinc-300 to-fuchsia-200 rounded-lg shadow-2xl shadow-zinc-400">
+                <div class="w-full flex flex-row items-center justify-around space-x-3 p-3">
+                    <div class="w-2/5 flex flex-col space-y-2">
+                        <p><span class="font-extrabold text-base font-serif uppercase text-sky-500">name:</span>  <span class="user-name text-base font-bold capitalize text-zinc-500"></span></p>
+                        <p><span class="font-extrabold text-base font-serif uppercase text-sky-500">com/org:</span>  <span class="user-company text-base font-bold capitalize text-zinc-500"></span></p>
+                    </div>
+                    <div class="w-2/5 flex flex-col space-y-2">
+                        <p><span class="font-extrabold text-lg font-serif uppercase text-sky-500">date:</span>  <span class="user-date text-base font-bold capitalize text-zinc-500"></span></p>
+                        <p><span class="font-extrabold text-lg font-serif uppercase text-sky-500">watch</span>  <span class="user-watch text-base font-extrabold capitalize text-zinc-500"></span></p>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </section>
   </div>
 `; 
 
@@ -345,7 +361,7 @@ textWaving('.item-one', '.item-two', '.item-three','.item-four')
 
 // form handling 
 const formHandler = () => {
-  const tl = gsap.timeline({defaults:{duration:.75, }});
+
   const form = document.querySelector('form');
   const successMsg = document.querySelector('#success-msg');
   const containers = document.querySelectorAll('.input-container');
@@ -424,9 +440,9 @@ const formHandler = () => {
             let error = null;
 
             if (inputField.name==='name') {
-                ({isValid, error}=namePattern(inputField.value.trim()))
+                ({isValid, error}=namePattern(inputField.value.trim()));
             } else if (inputField.name=== 'company-name') {
-                ({isValid,error}=companyPattern(inputField.value.trim()))
+                ({isValid,error}=companyPattern(inputField.value.trim()));
             }
             if (!isValid) {
                 colorize(line,placeholder, 'rgb(220, 20, 60)')
@@ -434,9 +450,11 @@ const formHandler = () => {
                 animationRestored(placeholder,-15,.75,'<15%')
                 allValid = false;
             } else {
+                                   
                 colorize(line, placeholder,'rgb(175, 172, 172)');
                 animationRestored(placeholder,0,1,'<10%')
                 errMsg.textContent = '';
+                
             }
         })
 
@@ -445,7 +463,10 @@ const formHandler = () => {
                 Name: form.querySelector('#name').value,
                 CompanyName: form.querySelector('#company-name').value
             }
-        
+            document.querySelector('.user-name').innerHTML=`${data.Name}`;
+            document.querySelector('.user-company').innerHTML=`${data.CompanyName}`;
+            dateSet('.user-date');
+            watch('.user-watch');
             successMsg.textContent = `Hello ${data.Name.split(' ')[0]}, Data submitted successfully!`;
             form.reset()
         }
