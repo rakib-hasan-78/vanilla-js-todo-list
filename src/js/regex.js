@@ -93,4 +93,9 @@ export const taskRegex = (task) => {
             error: `Task must be longer than 2 characters.`
         }
     }
+    return{
+        isValid: true,
+        error: null
+    }
 }
+

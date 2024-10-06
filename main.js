@@ -3,7 +3,7 @@ import { animationRestored, colorize, curveToStraight, textWaving } from './src/
 import { companyPattern, namePattern } from './src/js/regex';
 import { CustomError } from './src/js/customError';
 import { dateSet, watch } from './src/js/date';
-import { addTaskHandler } from './src/js/addTask';
+import { addTaskHandler, todoHandler } from './src/js/addTask';
 
 
 document.title = `Vanilla JS TODO List`
@@ -335,7 +335,7 @@ document.querySelector('#app').innerHTML = `
           </div>
       </div>
     </section>
-    <section id="todo-section" class="mt-10 w-full h-80">
+    <section id="todo-section" class="mt-10 mb-5 w-full min-h-fit">
         <div class="container mx-auto">
             <div class="flex flex-col flex-1 items-center justify-around w-4/6 mx-auto bg-gradient-to-t from-zinc-300 to-fuchsia-200 rounded-lg shadow-2xl shadow-zinc-400">
                 <!-----  user information ---->
@@ -354,7 +354,7 @@ document.querySelector('#app').innerHTML = `
                     <h2 class="text-center font-extrabold font-sans text-sky-400">task point</h2>
                     <div class="flex flex-row items-center justify-around space-x-1">
                         <div class="relative input-box w-2/3  m-2 flex items-center justify-end ">
-                             <input type="text" name="search-box" class="w-3/4 px-3 py-2 bg-gradient-to-t from-zinc-300 outline-none rounded-md shadow-md shadow-gray-400 to-fuchsia-200 placeholder:text-fuchsia-700/20 text-center placeholder:text-center " id="search" placeholder="add your tasks"/>
+                             <input type="text" name="search-box" value = "" class="w-3/4 px-3 py-2 bg-gradient-to-t from-zinc-300 outline-none rounded-md shadow-md shadow-gray-400 to-fuchsia-200 placeholder:text-fuchsia-700/20 text-center placeholder:text-center " id="search" placeholder="add your tasks"/>
 
                              <i class="fas fa-times absolute cursor-pointer right-2 bottom-1.5 text-xl text-sky-800 hidden cancel-mark"></i>
 
@@ -366,6 +366,24 @@ document.querySelector('#app').innerHTML = `
                             <button type="button" class="w-2/3 bg-cyan-700 py-2 px-3 text-sky-50 rounded-md shadow-md shadow-gray-400 add-btn">add</button>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="todolist-container flex flex-col items-center justify-around w-4/6 mx-auto bg-gradient-to-t from-zinc-300 to-fuchsia-200 my-7 rounded-md shadow-xl shadow-zinc-500/10 py-4 px-2 min-h-fit">
+                <div class="w-5/6 flex flex-col items-center justify-around p-2 border">
+                       <table class="table-auto w-full">
+            <thead>
+                <tr class="text-left bg-gray-200">
+                    <th class="p-2">SL.</th>
+                    <th class="p-2">Id</th>
+                    <th class="p-2">Tasks</th>
+                    <th class="p-2">Edit</th>
+                    <th class="p-2">Complete</th>
+                    <th class="p-2">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
                 </div>
             </div> 
         </div>
@@ -496,3 +514,5 @@ const formHandler = () => {
 formHandler()
 
 addTaskHandler('#search','.cancel-mark');
+
+todoHandler()
