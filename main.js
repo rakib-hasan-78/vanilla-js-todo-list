@@ -3,6 +3,7 @@ import { animationRestored, colorize, curveToStraight, textWaving } from './src/
 import { companyPattern, namePattern } from './src/js/regex';
 import { CustomError } from './src/js/customError';
 import { dateSet, watch } from './src/js/date';
+import { addTaskHandler } from './src/js/addTask';
 
 
 document.title = `Vanilla JS TODO List`
@@ -336,7 +337,8 @@ document.querySelector('#app').innerHTML = `
     </section>
     <section id="todo-section" class="mt-10 w-full h-80">
         <div class="container mx-auto">
-            <div class="flex flex-col flex-1 items-center justify-center w-4/6 mx-auto bg-gradient-to-t from-zinc-300 to-fuchsia-200 rounded-lg shadow-2xl shadow-zinc-400">
+            <div class="flex flex-col flex-1 items-center justify-around w-4/6 mx-auto bg-gradient-to-t from-zinc-300 to-fuchsia-200 rounded-lg shadow-2xl shadow-zinc-400">
+                <!-----  user information ---->
                 <div class="w-full flex flex-row items-center justify-around space-x-3 p-3">
                     <div class="w-2/5 flex flex-col space-y-2">
                         <p><span class="font-extrabold text-base font-serif uppercase text-sky-500">name:</span>  <span class="user-name text-base font-bold capitalize text-zinc-500"></span></p>
@@ -345,6 +347,24 @@ document.querySelector('#app').innerHTML = `
                     <div class="w-2/5 flex flex-col space-y-2">
                         <p><span class="font-extrabold text-lg font-serif uppercase text-sky-500">date:</span>  <span class="user-date text-base font-bold capitalize text-zinc-500"></span></p>
                         <p><span class="font-extrabold text-lg font-serif uppercase text-sky-500">watch</span>  <span class="user-watch text-base font-extrabold capitalize text-zinc-500"></span></p>
+                    </div>
+                </div>
+                <!----todo add tasks---->
+                <div class="w-3/4 my-5 bg-gradient-to-t from-zinc-100 to-fuchsia-100 rounded-lg shadow-2xl shadow-zinc-400 py-3" >
+                    <h2 class="text-center font-extrabold font-sans text-sky-400">task point</h2>
+                    <div class="flex flex-row items-center justify-around space-x-1">
+                        <div class="relative input-box w-2/3  m-2 flex items-center justify-end ">
+                             <input type="text" name="search-box" class="w-3/4 px-3 py-2 bg-gradient-to-t from-zinc-300 outline-none rounded-md shadow-md shadow-gray-400 to-fuchsia-200 placeholder:text-fuchsia-700/20 text-center placeholder:text-center " id="search" placeholder="add your tasks"/>
+
+                             <i class="fas fa-times absolute cursor-pointer right-2 bottom-1.5 text-xl text-sky-800 hidden cancel-mark"></i>
+
+                             <div class="error-manage w-3/4 mx-auto text-xs capitalize font-black italic text-red-400 opacity-80 absolute right-0  -bottom-5 origin-bottom flex items-end justify-start ">
+                             </div>
+
+                        </div>
+                        <div class="btn-box w-1/3 border">
+                            <button type="button" class="w-2/3 bg-cyan-700 py-2 px-3 text-sky-50 rounded-md shadow-md shadow-gray-400 add-btn">add</button>
+                        </div>
                     </div>
                 </div>
             </div> 
@@ -474,3 +494,5 @@ const formHandler = () => {
 }
 
 formHandler()
+
+addTaskHandler('#search','.cancel-mark');

@@ -79,3 +79,18 @@ export const companyPattern = (company) => {
 }
 
 
+export const taskRegex = (task) => {
+    const tasked = task.trim();
+    if (tasked==='') {
+        return{
+            isValid:false,
+            error:`Error Occurred:Task must have a value`
+        }
+    }
+    if (tasked<3) {
+        return{
+            isValid: false,
+            error: `Task must be longer than 2 characters.`
+        }
+    }
+}

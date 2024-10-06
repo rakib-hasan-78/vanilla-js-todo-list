@@ -15,10 +15,11 @@ export const watch = (userWatch) => {
         const date = new Date();
         const mins = date.getMinutes();
         let hours = date.getHours();
-        hours = hours%12 ||12;
+        let ampm = hours>=12 ? 'PM':'AM';
+        hours = hours % 12 ||12;
         
         const seconds = date.getSeconds();
-        document.querySelector(userWatch).innerHTML=`${hours<10 ? '0'+hours : hours} : ${mins<10 ? '0'+mins:mins} : ${seconds<10 ? '0'+seconds:seconds} ${hours>=12 ? 'PM' : 'AM'}.`;
+        document.querySelector(userWatch).innerHTML=`${hours<10 ? '0'+hours : hours} : ${mins<10 ? '0'+mins:mins} : ${seconds<10 ? '0'+seconds:seconds} ${ampm}.`;
 
     },1000)
 }
