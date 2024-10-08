@@ -4,6 +4,7 @@ import { companyPattern, namePattern } from './src/js/regex';
 import { CustomError } from './src/js/customError';
 import { dateSet, watch } from './src/js/date';
 import { addTaskHandler, todoHandler } from './src/js/addTask';
+import { updateModal } from './src/js/updateModal';
 
 
 document.title = `Vanilla JS TODO List`
@@ -370,7 +371,7 @@ document.querySelector('#app').innerHTML = `
             </div>
             <div class="todolist-container flex flex-col items-center justify-around w-4/6 mx-auto bg-gradient-to-t from-zinc-300 to-fuchsia-200 my-7 rounded-md shadow-xl shadow-zinc-500/10 py-4 px-2 min-h-fit">
                 <div class="w-5/6 flex flex-col items-center justify-around p-2 border">
-                       <table class="table-auto w-full">
+        <table class="table-auto w-full relative">
             <thead>
                 <tr class="text-left bg-gray-200">
                     <th class="p-2">SL.</th>
@@ -383,6 +384,8 @@ document.querySelector('#app').innerHTML = `
             </thead>
             <tbody>
             </tbody>
+             <!-- Modal Structure -->
+            <div id="edit-modal" class="fixed hidden inset-0 bg-black bg-opacity-50 items-center justify-center"></div>
         </table>
                 </div>
             </div> 
@@ -516,3 +519,5 @@ formHandler()
 addTaskHandler('#search','.cancel-mark');
 
 todoHandler()
+
+// updateModal();
