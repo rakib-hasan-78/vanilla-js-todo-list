@@ -1,4 +1,4 @@
-import { btnToComplete, updateValue } from "./btnHandlers";
+import { btnToComplete, btnToRemove, updateValue } from "./btnHandlers";
 import { iconChanger } from "./iconChanger";
 
 // import { taskRegex } from "./regex"
@@ -40,9 +40,9 @@ export const todoHandler = () => {
                 task: inputValue.value.trim(),
                 completed: false,
                 buttons: {
-                    edit : `<button class="edit-btn py-1 px-2 bg-gray-400 rounded" data-id="${new Date().getTime()}">Edit</button>`,
-                    complete: `<button class="done-btn py-1 px-2 bg-green-400 rounded">complete</button>`,
-                    remove : `<button class="delete-btn py-1 px-2 bg-red-400 rounded">remove</button>`
+                    edit : `<button class="edit-btn py-1 px-3 uppercase font-serif text-sm bg-gradient-to-r from-blue-800 to-indigo-900 rounded text-sky-50" data-id="${new Date().getTime()}">Edit</button>`,
+                    complete: `<button class="done-btn uppercase font-serif text-sm py-1 px-3 bg-gradient-to-r from-emerald-500 to-emerald-900 rounded text-sky-50">complete</button>`,
+                    remove : `<button class="delete-btn py-1 px-3 text-sm bg-gradient-to-r from-pink-500 to-rose-500 font-serif uppercase rounded text-sky-50">remove</button>`
                 }
     
         }
@@ -54,9 +54,9 @@ export const todoHandler = () => {
      tasks.forEach((task, index)=>{
         let taskClass = task.completed&&'line-through';
         let completeBtnText = task.completed ? 'Undo' : 'Complete';
-        const editBtnDisabled = task.completed ? 'disabled' : '';
+        
         let row = document.createElement('tr');
-        row.classList.add('text-white','bg-blue-500');
+        row.classList.add('text-fuchsia-800/60','bg-gradient-to-r','from-zinc-300','to-fuchsia-200','border','border-spacing-8');
         row.setAttribute('data-id', task.id);
         row.innerHTML =`
             <td class="p-2">${index < 9 ? '0' + (index + 1) : index + 1}</td>
@@ -67,7 +67,6 @@ export const todoHandler = () => {
             <td class="p-2">${task.buttons.remove}</td>
         `;
         tbody.appendChild(row);
-
         // Now handle button states after the row is added
         const editBtn = row.querySelector('.edit-btn');
         const completeBtn = row.querySelector('.done-btn');
@@ -84,6 +83,7 @@ export const todoHandler = () => {
     inputValue.value = '';
     updateValue(tasks);
     btnToComplete(tasks )
+    btnToRemove(tasks);
 })
 
 }

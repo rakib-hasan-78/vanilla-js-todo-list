@@ -5,6 +5,7 @@ import { CustomError } from './src/js/customError';
 import { dateSet, watch } from './src/js/date';
 import { addTaskHandler, todoHandler } from './src/js/addTask';
 import { updateModal } from './src/js/updateModal';
+import { footer } from './src/js/footer';
 
 
 document.title = `Vanilla JS TODO List`
@@ -23,7 +24,7 @@ document.querySelector('#app').innerHTML = `
       </main>
     </header>
     
-    <section id="app-required" class=" flex flex-1 items-center justify-center mb-14">
+    <section id="app-required" class="flex flex-1 items-center justify-center mb-14">
       <div class="container flex items-center justify-center">
           <div class="bg-gradient-to-t from-zinc-300 to-fuchsia-200 w-4/6 grid grid-cols-2 gap-3 rounded-lg shadow-2xl shadow-zinc-400 relative h-80">
             <div>
@@ -336,18 +337,18 @@ document.querySelector('#app').innerHTML = `
           </div>
       </div>
     </section>
-    <section id="todo-section" class="mt-10 mb-5 w-full min-h-fit">
+    <section id="todo-section" class="hidden mt-10 mb-5 w-full min-h-fit">
         <div class="container mx-auto">
             <div class="flex flex-col flex-1 items-center justify-around w-4/6 mx-auto bg-gradient-to-t from-zinc-300 to-fuchsia-200 rounded-lg shadow-2xl shadow-zinc-400">
                 <!-----  user information ---->
                 <div class="w-full flex flex-row items-center justify-around space-x-3 p-3">
                     <div class="w-2/5 flex flex-col space-y-2">
-                        <p><span class="font-extrabold text-base font-serif uppercase text-sky-500">name:</span>  <span class="user-name text-base font-bold capitalize text-zinc-500"></span></p>
-                        <p><span class="font-extrabold text-base font-serif uppercase text-sky-500">com/org:</span>  <span class="user-company text-base font-bold capitalize text-zinc-500"></span></p>
+                        <p><span class="font-extrabold text-base font-serif uppercase text-sky-500"> <i class="fas fa-user"></i></span>   <span class="user-name text-base font-bold capitalize text-zinc-500"></span></p>
+                        <p><span class="font-extrabold text-base font-serif uppercase text-sky-500"><i class="fa-solid fa-building"></i> </span>  <span class="user-company text-base font-bold capitalize text-zinc-500"></span></p>
                     </div>
                     <div class="w-2/5 flex flex-col space-y-2">
-                        <p><span class="font-extrabold text-lg font-serif uppercase text-sky-500">date:</span>  <span class="user-date text-base font-bold capitalize text-zinc-500"></span></p>
-                        <p><span class="font-extrabold text-lg font-serif uppercase text-sky-500">watch</span>  <span class="user-watch text-base font-extrabold capitalize text-zinc-500"></span></p>
+                        <p><span class="font-extrabold text-lg font-serif uppercase text-sky-500"><i class="fa-solid fa-calendar"></i>  </span>  <span class="user-date text-base font-bold capitalize text-zinc-500"></span></p>
+                        <p><span class="font-extrabold text-lg font-serif uppercase text-sky-500"> <i class="fa-solid fa-clock"></i> </span>  <span class="user-watch text-base font-extrabold capitalize text-zinc-500"></span></p>
                     </div>
                 </div>
                 <!----todo add tasks---->
@@ -363,22 +364,22 @@ document.querySelector('#app').innerHTML = `
                              </div>
 
                         </div>
-                        <div class="btn-box w-1/3 border">
+                        <div class="btn-box w-1/3">
                             <button type="button" class="w-2/3 bg-cyan-700 py-2 px-3 text-sky-50 rounded-md shadow-md shadow-gray-400 add-btn">add</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="todolist-container flex flex-col items-center justify-around w-4/6 mx-auto bg-gradient-to-t from-zinc-300 to-fuchsia-200 my-7 rounded-md shadow-xl shadow-zinc-500/10 py-4 px-2 min-h-fit">
-                <div class="w-5/6 flex flex-col items-center justify-around p-2 border">
-        <table class="table-auto w-full relative">
+            <div class="todolist-container  flex flex-col items-center justify-around w-4/6 mx-auto  my-7 rounded-md shadow-sm shadow-zinc-500/10 py-4 px-2 min-h-fit">
+                <div class="w-5/6 table-section flex flex-col items-center justify-around p-2 border">
+        <table class="table-auto w-full relative border-spacing-4">
             <thead>
-                <tr class="text-left bg-gray-200">
+                <tr class="text-left bg-gradient-to-t from-zinc-300 to-fuchsia-200 text-fuchsia-500/60 rounded-md mb-2">
                     <th class="p-2">SL.</th>
                     <th class="p-2">Id</th>
                     <th class="p-2">Tasks</th>
                     <th class="p-2">Edit</th>
-                    <th class="p-2">Complete</th>
+                    <th class="p-2">Done/Undo</th>
                     <th class="p-2">Remove</th>
                 </tr>
             </thead>
@@ -391,6 +392,7 @@ document.querySelector('#app').innerHTML = `
             </div> 
         </div>
     </section>
+    <footer id="footer" class="text-center flex items-center justify-center py-2 text-zinc-50 flex-col"></footer>
   </div>
 `; 
 
@@ -510,6 +512,10 @@ const formHandler = () => {
             watch('.user-watch');
             successMsg.textContent = `Hello ${data.Name.split(' ')[0]}, Data submitted successfully!`;
             form.reset()
+            setTimeout(()=>{
+            document.querySelector('#app-required').classList.add('hidden')
+            document.querySelector('#todo-section').classList.remove('hidden');
+            },2000)
         }
     })
 }
@@ -519,5 +525,5 @@ formHandler()
 addTaskHandler('#search','.cancel-mark');
 
 todoHandler()
-
+footer();
 // updateModal();
